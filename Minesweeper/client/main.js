@@ -609,6 +609,11 @@ async function bulkRun() {
 	else {
 		var runSeed = 0;
     }
+	
+	document.getElementById("BulkRun").disabled = true;
+	document.getElementById("NewGame").disabled = true;
+	document.getElementById("repeatGame").disabled = true;
+	document.getElementById("AnalysisButton").disabled = true;
 
     var options = {};
     options.playStyle = PLAY_STYLE_NOFLAGS;
@@ -627,8 +632,10 @@ async function bulkRun() {
     while (played < size) {
 
         played++;
+		document.getElementById("BulkRun").innerHTML = "Bulk run (" + played + "/" + size + ")";
 
         var gameSeed = rng() * Number.MAX_SAFE_INTEGER;
+		document.getElementById("seed").value = gameSeed;
 
         console.log(gameSeed);
 
@@ -692,9 +699,13 @@ async function bulkRun() {
         }
 
     }
-
-
     console.log("Played " + played + " won " + won);
+	showMessage("Played " + played + " won " + won);
+	document.getElementById("BulkRun").disabled = false;
+	document.getElementById("NewGame").disabled = false;
+	document.getElementById("repeatGame").disabled = false;
+	document.getElementById("AnalysisButton").disabled = false;
+	document.getElementById("BulkRun").innerHTML = "Bulk run";
 
 
     return game;
