@@ -190,7 +190,7 @@ async function startup() {
         board.setStarted();
     }
 
-    bulkRun(5678, 10000);
+    //bulkRun(seed, 10000);
 
     showMessage("Welcome to minesweeper solver dedicated to Annie");
 }
@@ -560,7 +560,55 @@ function showDownloadLink(show, url) {
 
 }
 
-async function bulkRun(runSeed, size) {
+async function bulkRun() {
+	var width;
+	var height;
+	var mines;
+	if (document.getElementById("beginner").checked) {
+		width=9; height=9; mines=10;
+    }
+    else if (document.getElementById("intermediate").checked) {
+        width=16; height=16; mines=40;
+    }
+	else if (document.getElementById("expert").checked) {
+        width=30; height=16; mines=99;
+    }
+	else {
+
+		const MAX_WIDTH = 200;
+		const MAX_HEIGHT = 200;
+
+		var widthX = document.getElementById("width").value;
+		var heightX = document.getElementById("height").value;
+		var minesX = document.getElementById("mines").value;
+
+		if (isNaN(widthX)) {
+			document.getElementById("width").focus();
+			return;
+		}
+		if (isNaN(heightX)) {
+			document.getElementById("height").focus();
+			return;
+		}
+		if (isNaN(minesX)) {
+			document.getElementById("mines").focus();
+			return;
+		}
+		width = Number(widthX);
+        height = Number(heightX);
+        mines = Number(minesX);
+	}
+	var size = document.getElementById("size").value;
+	if (isNaN(size)) {
+		document.getElementById("size").focus();
+		return;
+	}
+	if (document.getElementById("useSeed").checked) {
+        var runSeed = document.getElementById("seed").value;
+    } 
+	else {
+		var runSeed = 0;
+    }
 
     var options = {};
     options.playStyle = PLAY_STYLE_NOFLAGS;
@@ -584,9 +632,9 @@ async function bulkRun(runSeed, size) {
 
         console.log(gameSeed);
 
-        var game = new ServerGame(0, 30, 16, 99, startIndex, gameSeed, "safe");
+        var game = new ServerGame(0, width, height, mines, startIndex, gameSeed, "safe");
 
-        var board = new Board(0, 30, 16, 99, gameSeed, "safe");
+        var board = new Board(0, width, height, mines, gameSeed, "safe");
 
         var tile = game.getTile(startIndex);
 
