@@ -190,7 +190,7 @@ async function startup() {
         board.setStarted();
     }
 
-    //bulkRun(5678, 10000);
+    bulkRun(5678, 10000);
 
     showMessage("Welcome to minesweeper solver dedicated to Annie");
 }
