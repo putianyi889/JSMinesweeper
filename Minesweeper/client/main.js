@@ -627,10 +627,10 @@ async function bulkRun() {
 
     var rng = JSF(runSeed);  // create an RNG based on the seed
     var startIndex = 0;
-
+	
+	var timer=Date.now();
 
     while (played < size) {
-
         played++;
 		document.getElementById("BulkRun").innerHTML = "Bulk run (" + played + "/" + size + ")";
 
@@ -697,7 +697,11 @@ async function bulkRun() {
         if (revealedTiles.header.status == WON) {
             won++;
         }
-
+		if (Date.now()-timer > 1000) {
+			showMessage("Played " + played + " won " + won);
+			await sleep(0);
+			timer=Date.now();
+		}
     }
     console.log("Played " + played + " won " + won);
 	showMessage("Played " + played + " won " + won);
