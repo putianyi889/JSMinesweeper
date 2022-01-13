@@ -423,7 +423,6 @@ async function solver(board, options) {
         if (pe.bestProbability < 1 && pe.finalSolutionsCount < bfdaThreshold) {
 
             showMessage("The solver is starting brute force deep analysis on " + pe.finalSolutionsCount + " solutions");
-            await sleep(1);
 
             pe.generateIndependentWitnesses();
 
