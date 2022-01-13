@@ -5,11 +5,11 @@
 
 class Tile {
 	constructor(x, y, index) {
-		this.x = x;
-		this.y = y;
+		this.x = x; // 行标
+		this.y = y; // 列标
 		this.is_covered = true;
 		this.value = 0;
-		this.is_flagged = false;
+		this.is_flagged = false; // 是否标雷
 		this.foundBomb = false
         this.is_bomb;   // this gets set when the game is lost
         this.exploded = false;  // this gets set if this tile was the one clicked

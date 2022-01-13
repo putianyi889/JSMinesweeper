@@ -11,23 +11,23 @@ class Board {
 
 		this.MAX = 4294967295;
 
-        this.id = id;
-        this.gameType = gameType;
-		this.width = width;
-		this.height = height;
-        this.num_bombs = num_bombs;
-        this.seed = seed;
+        this.id = id; //getID()
+        this.gameType = gameType; //级别
+		this.width = width; //宽
+		this.height = height; //高
+        this.num_bombs = num_bombs; //雷数
+        this.seed = seed; //种子
 
-		this.tiles = [];
-		this.started = false;
-		this.bombs_left = this.num_bombs;
+		this.tiles = []; // 一维数组存所有格子。getTile(index)
+		this.started = false; //是否已开始。isStarted(), setStarted()
+		this.bombs_left = this.num_bombs; //剩余雷数
 		//this.tiles_left = this.width * this.height - this.num_bombs;
 		this.init_tiles();
 
-		this.gameover = false;
-		this.won = false;
+		this.gameover = false; //是否已结束。setGameLost(), setGameWon(), isGameover()
+		this.won = false; //是否已获胜。setGameWon()
 
-		this.highDensity = false;
+		this.highDensity = false; //是否高密度。剩余密度达到40%则认为是高密度。setHighDensity(tilesLeft, minesLeft), isHighDensity()
 
 		//console.log("... board created");
 
@@ -79,11 +79,11 @@ class Board {
 		return this.highDensity;
     }
 
-	xy_to_index(x, y) {
+	xy_to_index(x, y) { //行主序二维地址转一维地址
 		return y*this.width + x;
 	}
 	
-	getTileXY(x, y) {
+	getTileXY(x, y) { //x行y列
 		
 		var index = this.xy_to_index(x,y);
 		
