@@ -629,15 +629,18 @@ async function bulkRun() {
     var startIndex = 0;
 	
 	var timer=Date.now();
+	var longtimer=Date.now();
+	var lastplayed=0;
+	var timeleft="-";
 
     while (played < size) {
         played++;
-		document.getElementById("BulkRun").innerHTML = "Bulk run (" + played + "/" + size + ")";
+		// document.getElementById("BulkRun").innerHTML = "Bulk run (" + played + "/" + size + ")";
 
         var gameSeed = rng() * Number.MAX_SAFE_INTEGER;
 		document.getElementById("seed").value = gameSeed;
 
-        console.log(gameSeed);
+        //console.log(gameSeed);
 
         var game = new ServerGame(0, width, height, mines, startIndex, gameSeed, "safe");
 
@@ -667,10 +670,10 @@ async function bulkRun() {
                 var action = actions[i];
 
                 if (action.action == ACTION_CHORD) {
-                    console.log("Got a chord request!");
+                    //console.log("Got a chord request!");
 
                 } else if (action.action == ACTION_FLAG) {   // zero safe probability == mine
-                    console.log("Got a flag request!");
+                    //console.log("Got a flag request!");
 
                 } else {   // otherwise we're trying to clear
 
@@ -692,16 +695,23 @@ async function bulkRun() {
 
         }
 
-        console.log(revealedTiles.header.status);
+        //console.log(revealedTiles.header.status);
 
         if (revealedTiles.header.status == WON) {
             won++;
         }
-		if (Date.now()-timer > 1000) {
-			showMessage("Played " + played + " won " + won);
-			await sleep(0);
-			timer=Date.now();
+		var timenow=Date.now()
+		if (timenow-longtimer > 10000) {
+			timeleft=secondsToDhms((size-played)*10/(played-lastplayed));
+			lastplayed=played;
+			longtimer=timenow;
 		}
+		if (timenow-timer > 1000) {
+			showMessage(played + "/" + won + "=" + (won/played) + ", time left = " + timeleft);
+			await sleep(0);
+			timer=timenow;
+		}
+		
     }
     console.log("Played " + played + " won " + won);
 	showMessage("Played " + played + " won " + won);
@@ -714,6 +724,20 @@ async function bulkRun() {
 
     return game;
 
+}
+
+function secondsToDhms(seconds) {
+	seconds = Number(seconds);
+	var d = Math.floor(seconds / (3600*24));
+	var h = Math.floor(seconds % (3600*24) / 3600);
+	var m = Math.floor(seconds % 3600 / 60);
+	var s = Math.floor(seconds % 60);
+
+	var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+	var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+	var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+	var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+return dDisplay + hDisplay + mDisplay + sDisplay;
 }
 
 async function playAgain() {

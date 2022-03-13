@@ -24,18 +24,18 @@ async function solver(board, options) {
 
     // when initialising create some entry points to functions needed from outside
     if (board == null) {
-        console.log("Solver Initialisation request received");
+        //console.log("Solver Initialisation request received");
         solver.countSolutions = countSolutions;
         return;
     }
 
     if (options.verbose == null) {
         options.verbose = true;
-        writeToConsole("WARN: Verbose parameter not received by the solver, setting verbose = true");
+        //writeToConsole("WARN: Verbose parameter not received by the solver, setting verbose = true");
     }
 
     if (options.playStyle == null) {
-        writeToConsole("WARN: playstyle parameter not received by the solver, setting play style to flagging");
+        //writeToConsole("WARN: playstyle parameter not received by the solver, setting play style to flagging");
         options.playStyle = PLAY_STYLE_FLAGS;
     }
 
@@ -134,25 +134,26 @@ async function solver(board, options) {
 
         var work = new Set();  // use a map to deduplicate the witnessed tiles
 
-        showMessage("The solver is thinking...");
+        //showMessage("The solver is thinking...");
 
         for (var i = 0; i < board.tiles.length; i++) {
 
             var tile = board.getTile(i);
 
-            tile.clearHint();  // clear any previous hints
-
-            if (tile.isSolverFoundBomb()) {
+            //tile.clearHint();  // clear any previous hints
+			
+			if (tile.isCovered()) {
+                squaresLeft++;
+                allCoveredTiles.push(tile);
+                continue;  // if the tile hasn't been revealed yet then nothing to consider
+            }
+			else if (tile.isSolverFoundBomb()) {
                 minesLeft--;
                 tile.setProbability(0);
                 if (!tile.isFlagged()) {
                     unflaggedMines.push(tile);
                 }
                 continue;  // if the tile is a mine then nothing to consider
-            } else if (tile.isCovered()) {
-                squaresLeft++;
-                allCoveredTiles.push(tile);
-                continue;  // if the tile hasn't been revealed yet then nothing to consider
             }
 
             var adjTiles = board.getAdjacent(tile);
@@ -181,19 +182,19 @@ async function solver(board, options) {
 
         board.setHighDensity(squaresLeft, minesLeft);
 
-        writeToConsole("tiles left = " + squaresLeft);
-        writeToConsole("mines left = " + minesLeft);
-        writeToConsole("Witnesses  = " + witnesses.length);
-        writeToConsole("Witnessed  = " + witnessed.length);
+        //writeToConsole("tiles left = " + squaresLeft);
+        //writeToConsole("mines left = " + minesLeft);
+        //writeToConsole("Witnesses  = " + witnesses.length);
+        //writeToConsole("Witnessed  = " + witnessed.length);
 
         var result = [];
 
         // if we are in flagged mode then flag any mines currently unflagged
-        if (options.playStyle != PLAY_STYLE_EFFICIENCY) {
+        //if (options.playStyle != PLAY_STYLE_EFFICIENCY) {
             for (var tile of unflaggedMines) {
                 result.push(new Action(tile.getX(), tile.getY(), 0, ACTION_FLAG));
             }
-        }
+        //}
 
         // if there are no mines left to find the everything else is to be cleared
         if (minesLeft == 0) {
@@ -201,21 +202,21 @@ async function solver(board, options) {
                 var tile = allCoveredTiles[i];
                 result.push(new Action(tile.getX(), tile.getY(), 1, ACTION_CLEAR))
             }
-            showMessage("No mines left to find all remaining tiles are safe");
+            //showMessage("No mines left to find all remaining tiles are safe");
             return new EfficiencyHelper(board, witnesses, result, options.playStyle).process();
         }
 
         var oldMineCount = result.length;
 
         // add any trivial moves we've found
-        if (options.fullProbability || options.playStyle == PLAY_STYLE_EFFICIENCY) {
-            console.log("Skipping trivial analysis since Probability Engine analysis is required")
-        } else {
+        //if (options.fullProbability || options.playStyle == PLAY_STYLE_EFFICIENCY) {
+            //console.log("Skipping trivial analysis since Probability Engine analysis is required")
+        //} else {
             result.push(...trivial_actions(board, witnesses));
-        }
+        //}
  
         if (result.length > oldMineCount) {
-            showMessage("The solver found " + result.length + " trivial safe moves");
+            //showMessage("The solver found " + result.length + " trivial safe moves");
             return result;
             /*
             if (options.playStyle != PLAY_STYLE_FLAGS) {
@@ -249,10 +250,10 @@ async function solver(board, options) {
 
         pe.process();
 
-        writeToConsole("probability Engine took " + pe.duration + " milliseconds to complete");
+        //writeToConsole("probability Engine took " + pe.duration + " milliseconds to complete");
 
         if (pe.finalSolutionCount == 0) {
-            showMessage("The board is in an illegal state");
+            //showMessage("The board is in an illegal state");
             return result;
         }
 
@@ -260,11 +261,14 @@ async function solver(board, options) {
         var offEdgeAllSafe = false;
         if (pe.offEdgeProbability == 1) {
             var edgeSet = new Set();  // build a set containing all the on edge tiles
-            for (var i = 0; i < witnessed.length; i++) {
+			var l=witnessed.length;
+			var i;
+            for (i = 0; i < l; i++) {
                 edgeSet.add(witnessed[i].index);
             }
             // any tiles not on the edge can be cleared
-            for (var i = 0; i < allCoveredTiles.length; i++) {
+			l=allCoveredTiles.length;
+            for (i = 0; i < l; i++) {
                 var tile = allCoveredTiles[i];
                 if (!edgeSet.has(tile.index)) {
                     result.push(new Action(tile.getX(), tile.getY(), 1, ACTION_CLEAR));
@@ -272,7 +276,7 @@ async function solver(board, options) {
             }
 
             if (result.length > 0) {
-                writeToConsole("The Probability Engine has determined all off edge tiles must be safe");
+                //writeToConsole("The Probability Engine has determined all off edge tiles must be safe");
                 offEdgeAllSafe = true;
                 //showMessage("The solver has determined all off edge tiles must be safe");
                 //return result;
@@ -283,9 +287,16 @@ async function solver(board, options) {
         if (pe.fullAnalysis) {
 
              // Set the probability for each tile on the edge 
-            for (var i = 0; i < pe.boxes.length; i++) {
-                for (var j = 0; j < pe.boxes[i].tiles.length; j++) {
-                    pe.boxes[i].tiles[j].setProbability(pe.boxProb[i]);
+			var i;
+			var l=pe.boxes.length;
+			var j;
+			var lj;
+			var prob;
+            for (i = 0; i < l; i++) {
+				lj=pe.boxes[i].tiles.length
+				prob=pe.boxProb[i]
+                for (j = 0; j < lj; j++) {
+                    pe.boxes[i].tiles[j].setProbability(prob);
                 }
             }
 
@@ -442,7 +453,7 @@ async function solver(board, options) {
 
                 bfdaCompleted = bfda.completed;
             } else {
-                writeToConsole("Brute Force requires too many cycles - skipping BFDA: " + iterator.cycles);
+                //writeToConsole("Brute Force requires too many cycles - skipping BFDA: " + iterator.cycles);
             }
 
 
@@ -455,7 +466,7 @@ async function solver(board, options) {
 
                     deadTiles = bfda.deadTiles;
                     var winChanceText = (bfda.winChance * 100).toFixed(2);
-                    showMessage("The solver has calculated the best move has a " + winChanceText + "% chance to win the game." + formatSolutions(pe.finalSolutionsCount));
+                    //showMessage("The solver has calculated the best move has a " + winChanceText + "% chance to win the game." + formatSolutions(pe.finalSolutionsCount));
 
                 } else {
                     showMessage("The solver has calculated that all the remaining tiles are dead." + formatSolutions(pe.finalSolutionsCount));
@@ -487,7 +498,7 @@ async function solver(board, options) {
             for (var i = 0; i < deadTiles.length; i++) {
                 var tile = deadTiles[i];
 
-                writeToConsole("Tile " + tile.asText() + " is dead");
+                //writeToConsole("Tile " + tile.asText() + " is dead");
                 for (var j = 0; j < result.length; j++) {
                     if (result[j].x == tile.x && result[j].y == tile.y) {
                         result[j].dead = true;
@@ -499,7 +510,7 @@ async function solver(board, options) {
             }
 
             if (pe.bestProbability == 1) {
-                showMessage("The solver has found some certain moves using the probability engine." + formatSolutions(pe.finalSolutionsCount));
+                //showMessage("The solver has found some certain moves using the probability engine." + formatSolutions(pe.finalSolutionsCount));
 
                  // identify where the bombs are
                 for (var tile of pe.minesFound) {
@@ -512,7 +523,7 @@ async function solver(board, options) {
  
                 result = new EfficiencyHelper(board, witnesses, result, options.playStyle).process();
             } else {
-                showMessage("The solver has found the best guess on the edge using the probability engine." + formatSolutions(pe.finalSolutionsCount));
+                //showMessage("The solver has found the best guess on the edge using the probability engine." + formatSolutions(pe.finalSolutionsCount));
                 if (pe.duration < 50) {  // if the probability engine didn't take long then use some tie-break logic
                     result = tieBreak(pe, result, partialBFDA);
                 }
@@ -523,7 +534,7 @@ async function solver(board, options) {
 
             result.push(new Action(bestGuessTile.getX(), bestGuessTile.getY(), pe.offEdgeProbability), ACTION_CLEAR);
 
-            showMessage("The solver has decided the best guess is off the edge." + formatSolutions(pe.finalSolutionsCount));
+            //showMessage("The solver has decided the best guess is off the edge." + formatSolutions(pe.finalSolutionsCount));
 
         }
 
@@ -665,8 +676,8 @@ async function solver(board, options) {
     function trivial_actions(board, witnesses) {
 
         var result = new Map();
-
-        for (var i = 0; i < witnesses.length; i++) {
+		var l=witnesses.length;
+        for (var i = 0; i < l; i++) {
 
             var tile = witnesses[i];
 
@@ -689,7 +700,8 @@ async function solver(board, options) {
 
             // if the tile has the correct number of flags then the other adjacent tiles are clear
             if (flags == tile.getValue() && covered > 0) {
-                for (var j = 0; j < adjTiles.length; j++) {
+				var lj=adjTiles.length;
+                for (var j = 0; j < lj; j++) {
                     var adjTile = adjTiles[j];
                     if (adjTile.isCovered() && !adjTile.isSolverFoundBomb()) {
                         adjTile.setProbability(1);  // definite clear
@@ -699,7 +711,8 @@ async function solver(board, options) {
 
                 // if the tile has n remaining covered squares and needs n more flags then all the adjacent files are flags
             } else if (tile.getValue() == flags + covered && covered > 0) {
-                for (var j = 0; j < adjTiles.length; j++) {
+				var lj=adjTiles.length;
+                for (var j = 0; j < lj; j++) {
                     var adjTile = adjTiles[j];
                     if (adjTile.isCovered() && !adjTile.isSolverFoundBomb()) { // if covered, not already a known mine and isn't flagged
                         adjTile.setProbability(0);  // definite mine
@@ -714,7 +727,7 @@ async function solver(board, options) {
 
         }
 
-        writeToConsole("Found " + result.size + " moves trivially");
+        //writeToConsole("Found " + result.size + " moves trivially");
 
         // send it back as an array
         return Array.from(result.values());
@@ -777,9 +790,9 @@ async function solver(board, options) {
             action = bestGuess;
         }
 
-        if (action == null) {
-            writeToConsole("Off edge guess has returned null!", true);
-        }
+        //if (action == null) {
+        //    writeToConsole("Off edge guess has returned null!", true);
+        //}
 
         return action;
 
@@ -790,7 +803,7 @@ async function solver(board, options) {
 
     function getOffEdgeCandidates(board, pe, witnesses, allCoveredTiles) {
 
-        writeToConsole("getting off edge candidates");
+        //writeToConsole("getting off edge candidates");
 
         var accepted = new Set();  // use a map to deduplicate the witnessed tiles
 
@@ -1139,7 +1152,7 @@ async function solver(board, options) {
         action.commonClears = commonClears;
 
         tile.setProbability(action.prob, action.progress);
-        writeToConsole("Tile " + tile.asText() + ", secondary safety = " + secondarySafety + ",  progress = " + action.progress + ", weight = " + action.weight + ", expected clears = " + action.expectedClears + ", common clears = " + commonClears.length);
+        //writeToConsole("Tile " + tile.asText() + ", secondary safety = " + secondarySafety + ",  progress = " + action.progress + ", weight = " + action.weight + ", expected clears = " + action.expectedClears + ", common clears = " + commonClears.length);
 
     }
 
