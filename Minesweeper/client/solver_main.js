@@ -140,7 +140,7 @@ async function solver(board, options) {
 
             var tile = board.getTile(i);
 
-            //tile.clearHint();  // clear any previous hints
+            tile.clearHint();  // clear any previous hints
 			
 			if (tile.isCovered()) {
                 squaresLeft++;
