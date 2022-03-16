@@ -142,18 +142,18 @@ async function solver(board, options) {
 
             tile.clearHint();  // clear any previous hints
 			
-			if (tile.isCovered()) {
-                squaresLeft++;
-                allCoveredTiles.push(tile);
-                continue;  // if the tile hasn't been revealed yet then nothing to consider
-            }
-			else if (tile.isSolverFoundBomb()) {
+			if (tile.isSolverFoundBomb()) {
                 minesLeft--;
                 tile.setProbability(0);
                 if (!tile.isFlagged()) {
                     unflaggedMines.push(tile);
                 }
                 continue;  // if the tile is a mine then nothing to consider
+            }
+			else if (tile.isCovered()) {
+                squaresLeft++;
+                allCoveredTiles.push(tile);
+                continue;  // if the tile hasn't been revealed yet then nothing to consider
             }
 
             var adjTiles = board.getAdjacent(tile);
