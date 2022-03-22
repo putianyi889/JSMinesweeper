@@ -598,9 +598,16 @@ async function bulkRun() {
         height = Number(heightX);
         mines = Number(minesX);
 	}
-	var size = document.getElementById("size").value;
-	if (isNaN(size)) {
-		document.getElementById("size").focus();
+	var fixsize=document.getElementById("fixsize").checked;
+	var sizelimit = document.getElementById("sizelimit").value;
+	var fixtime=document.getElementById("fixtime").checked;
+	var timelimit=document.getElementById("timelimit").value;
+	if (fixsize && isNaN(sizelimit)) {
+		document.getElementById("sizelimit").focus();
+		return;
+	}
+	if (fixtime && isNaN(timelimit)) {
+		document.getElementById("timelimit").focus();
 		return;
 	}
 	if (document.getElementById("useSeed").checked) {
@@ -614,6 +621,10 @@ async function bulkRun() {
 	document.getElementById("NewGame").disabled = true;
 	document.getElementById("repeatGame").disabled = true;
 	document.getElementById("AnalysisButton").disabled = true;
+	document.getElementById("fixsize").disabled = true;
+	document.getElementById("fixtime").disabled = true;
+	document.getElementById("sizelimit").disabled = true;
+	document.getElementById("timelimit").disabled = true;
 
     var options = {};
     options.playStyle = PLAY_STYLE_NOFLAGS;
@@ -621,6 +632,7 @@ async function bulkRun() {
     options.advancedGuessing = true;
 
     var startTime = Date.now();
+	var endTime = startTime+timelimit*3600*1000;
 
     var played = 0;
     var won = 0;
@@ -633,7 +645,9 @@ async function bulkRun() {
 	var lastplayed=0;
 	var timeleft="-";
 
-    while (played < size) {
+    while (true) {
+		if (fixsize && played >= sizelimit) break;
+		if (fixtime && timenow >= endTime) break;
         played++;
 		// document.getElementById("BulkRun").innerHTML = "Bulk run (" + played + "/" + size + ")";
 
@@ -701,12 +715,15 @@ async function bulkRun() {
             won++;
         }
 		var timenow=Date.now()
-		if (timenow-longtimer > 10000) {
-			timeleft=secondsToDhms((size-played)*10/(played-lastplayed));
+		if (fixsize && timenow-longtimer > 10000) {
+			timeleft=secondsToDhms((sizelimit-played)*10/(played-lastplayed));
 			lastplayed=played;
 			longtimer=timenow;
 		}
 		if (timenow-timer > 1000) {
+			if (fixtime) {
+				timeleft=secondsToDhms((endTime-timenow)/1000);
+			}
 			showMessage(played + "/" + won + "=" + (won/played) + ", time left = " + timeleft);
 			await sleep(0);
 			timer=timenow;
@@ -719,6 +736,10 @@ async function bulkRun() {
 	document.getElementById("NewGame").disabled = false;
 	document.getElementById("repeatGame").disabled = false;
 	document.getElementById("AnalysisButton").disabled = false;
+	document.getElementById("fixsize").disabled = false;
+	document.getElementById("fixtime").disabled = false;
+	document.getElementById("sizelimit").disabled = false;
+	document.getElementById("timelimit").disabled = false;
 	document.getElementById("BulkRun").innerHTML = "Bulk run";
 
 

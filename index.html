@@ -21,7 +21,7 @@
     <!-- control panel on the left -->
     <nav id="controls" style="zoom: 0.9; position:relative; left:0px; top:0px">
 
-        <div id="play0" style="margin-top: 0px;">
+        <div id="play0" style="margin-top: 0px;" >
             <div class="checkboxes">
                 <label><input type="checkbox" class="checkbox" id="useSeed" /> <span>Use seed</span></label>
             </div>
@@ -57,9 +57,15 @@
                 <input id="mines" onkeypress="makeCustom()" type="text" />
             </div>
 			<div class="block">
-                <label>Size:</label>
-                <input id="size" type="text" />
-            </div>
+				<input id="fixsize" type="radio" class="radioButton" name="limits" value="0" style="width: 20px" />
+				<span>Size:</span>
+				<input id="sizelimit" type="text" style="width: 70px" />
+			</div>
+			<div class="block">
+				<input id="fixtime" type="radio" class="radioButton" name="limits" value="1" style="width: 20px" />
+				<span>Time(hr):</span>
+				<input id="timelimit" type="text" style="width: 40px" />
+			</div>
         </div>
 
 
@@ -69,9 +75,9 @@
             <button style="margin-top: 1em;" id="localStorageButton" onclick="openLocalStorage()">Local Storage</button>
         </div>
 
-        <button type="button" style="margin-top: 1em;" id="NewGame" onclick="apply()">New game</button>
+        <button type="button" style="margin-top: 1em;" id="NewGame" onclick="apply()" hidden="true">New game</button>
 
-        <button type="button" style="margin-top: 0em;" id="repeatGame" onclick="playAgain()">Play again</button>
+        <button type="button" style="margin-top: 0em;" id="repeatGame" onclick="playAgain()" hidden="true">Play again</button>
 		
 		<button type="button" style="margin-top: 0em;" id="BulkRun" onclick="bulkRun()">Bulk run</button>
 
