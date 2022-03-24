@@ -227,7 +227,7 @@ function saveLocalStorage() {
 
     key = localStorageSelection.value;
 
-    console.log("Saving board position to local storage key '" + key + "'");
+    //console.log("Saving board position to local storage key '" + key + "'");
 
 }
 
@@ -499,47 +499,7 @@ function secondsToDhms(seconds) {
 	var h = Math.floor(seconds % (3600*24) / 3600);
 	var m = Math.floor(seconds % 3600 / 60);
 	var s = Math.floor(seconds % 60);
-
-	var dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
-	var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-	var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
-	var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-return d + ":" + h + ":" + m + ":" + s;
-}
-
-async function playAgain() {
-
-    // let the server know the game is over
-    if (board != null && !analysisMode) {
-        callKillGame(board.getID());
-
-        var reply = copyGame(board.getID());
-
-        var id = reply.id;
-
-        board = new Board(id, board.width, board.height, board.num_bombs, board.seed, board.gameType);
-
-        TILE_SIZE = parseInt(docTileSize.value);
-
-        resizeCanvas(board.width, board.height);
-
-        browserResized();
-
-        for (var y = 0; y < board.height; y++) {
-            for (var x = 0; x < board.width; x++) {
-                draw(x, y, HIDDEN);
-            }
-        }
-
-        updateMineCount(board.num_bombs);
-
-        canvasLocked = false;  // just in case it was still locked (after an error for example)
-
-        showMessage("Replay game requested");
-    } else {
-        showMessage("No game to replay");
-    }
-
+	return d + ":" + h + ":" + m + ":" + s;
 }
 
 async function newGameFromBlob(blob) {
