@@ -336,39 +336,6 @@ async function downloadAsMBF(e) {
 
 }
 
-function switchToAnalysis(doAnalysis) {
-
-    if (doAnalysis) {
-        gameBoard = board;
-        board = analysisBoard;
-
-        showDownloadLink(true, "")  // display the hyperlink
-
-        title.innerHTML = "Minesweeper analyser";  // change the title
-        switchButton.innerHTML = "Switch to Player";
-    } else {
-        analysisBoard = board;
-        board = gameBoard;
-
-        showDownloadLink(false, "")  // hide the hyperlink (we don't have the url until we play a move - this could be improved)
-
-        title.innerHTML = "Minesweeper player"; // change the title
-        switchButton.innerHTML = "Switch to Analyser";
-    }
-
-    resizeCanvas(board.width, board.height);
-
-    browserResized();
-
-    renderHints([]);  // clear down hints
-
-    renderTiles(board.tiles); // draw the board
-
-    updateMineCount(board.bombs_left);  // reset the mine count
-
-    analysisMode = doAnalysis;
-}
-
 // render an array of tiles to the canvas
 function renderHints(hints, otherActions) {
 
@@ -652,7 +619,7 @@ async function bulkRun() {
 		// document.getElementById("BulkRun").innerHTML = "Bulk run (" + played + "/" + size + ")";
 
         var gameSeed = rng() * Number.MAX_SAFE_INTEGER;
-		document.getElementById("seed").value = gameSeed;
+		// document.getElementById("seed").value = gameSeed;
 
         //console.log(gameSeed);
 
@@ -724,13 +691,13 @@ async function bulkRun() {
 			if (fixtime) {
 				timeleft=secondsToDhms((endTime-timenow)/1000);
 			}
-			showMessage(played + "/" + won + "=" + (won/played) + ", time left = " + timeleft);
+			showMessage(won + "/" + played + "=" + (won/played).toPrecision(4) + ", " + timeleft);
 			await sleep(0);
 			timer=timenow;
 		}
 		
     }
-    console.log("Played " + played + " won " + won);
+    //console.log("Played " + played + " won " + won);
 	showMessage("Played " + played + " won " + won);
 	document.getElementById("BulkRun").disabled = false;
 	document.getElementById("NewGame").disabled = false;
@@ -740,7 +707,7 @@ async function bulkRun() {
 	document.getElementById("fixtime").disabled = false;
 	document.getElementById("sizelimit").disabled = false;
 	document.getElementById("timelimit").disabled = false;
-	document.getElementById("BulkRun").innerHTML = "Bulk run";
+	//document.getElementById("BulkRun").innerHTML = "Bulk run";
 
 
     return game;
@@ -758,7 +725,7 @@ function secondsToDhms(seconds) {
 	var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
 	var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
 	var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-return dDisplay + hDisplay + mDisplay + sDisplay;
+return d + ":" + h + ":" + m + ":" + s;
 }
 
 async function playAgain() {

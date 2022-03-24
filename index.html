@@ -293,36 +293,6 @@
 
         }
 
-        function setAnalysis() {
-
-            // can't switch modes while the solver is working
-            if (canvasLocked) {
-                return;
-            }
-
-            //if (document.getElementById("analysismode").checked) {
-            if (!analysisMode) {
-                document.getElementById("play0").style.display = "none";
-                document.getElementById("play1").style.display = "none";
-                document.getElementById("analysis0").style.display = "block";
-                document.getElementById("analysis1").style.display = "block";
-                document.getElementById("repeatGame").style.display = "none";
-                document.getElementById("NewGame").innerHTML = "Reset board";
-
-                switchToAnalysis(true);
-            } else {
-                document.getElementById("play0").style.display = "";
-                document.getElementById("play1").style.display = "";
-                document.getElementById("analysis0").style.display = "none";
-                document.getElementById("analysis1").style.display = "none";
-                document.getElementById("repeatGame").style.display = "";
-                document.getElementById("NewGame").innerHTML = "New game";
-
-                switchToAnalysis(false);
-            }
-
-            
-        }
 
         function makeCustom() {
 
