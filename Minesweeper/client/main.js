@@ -146,10 +146,6 @@ async function startup() {
     window.addEventListener("beforeunload", (event) => exiting(event));
 
     // add a listener for mouse clicks on the canvas
-    canvas.addEventListener("mousedown", (event) => on_click(event));
-    canvas.addEventListener('wheel', (event) => on_mouseWheel(event));
-    canvas.addEventListener('mouseenter', (event) => on_mouseEnter(event));
-    canvas.addEventListener('mouseleave', (event) => on_mouseLeave(event));
 
     // add some hot key 
 
@@ -968,25 +964,6 @@ function draw(x, y, tileType) {
 
 // have the tooltip follow the mouse
 
-function on_mouseEnter(e) {
-
-    tooltip.style.display = "inline-block";
- 
-}
-
-function on_mouseLeave(e) {
-
-    hoverTile = null;
-
-    tooltip.style.display = "none";
-
-    if (dragging) {
-        console.log("Dragging stopped due to mouse off canvas");
-        dragging = false;
-    }
-
-}
-
 // stuff to do when we click on the board
 
 /**
@@ -1039,48 +1016,6 @@ function analysis_toggle_flag(tile) {
     tiles.push(tile);
 
     return tiles;
-}
-
-
-function on_mouseWheel(event) {
-
-    if (!analysisMode) {
-        return;
-    }
-
-    //board.resetForAnalysis();
-
-    //console.log("Mousewheel event at X=" + event.offsetX + ", Y=" + event.offsetY);
-
-    var row = Math.floor(event.offsetY / TILE_SIZE);
-    var col = Math.floor(event.offsetX / TILE_SIZE);
-
-    //console.log("Resolved to Col=" + col + ", row=" + row);
-
-    var delta = Math.sign(event.deltaY);
-
-    var tile = board.getTileXY(col, row);
-
-    var flagCount = board.adjacentFoundMineCount(tile);
-    var covered = board.adjacentCoveredCount(tile);
-
-    if (tile.isCovered()) {
-        newValue = flagCount;
-    } else {
-        var newValue = tile.getValue() + delta;
-    }
- 
-    if (newValue < flagCount) {
-        newValue = flagCount + covered;
-    } else if (newValue > flagCount + covered) {
-        newValue = flagCount;
-    }
-
-    tile.setValue(newValue);
-
-     // update the graphical board
-    window.requestAnimationFrame(() => renderTiles([tile]));
-
 }
 
 // reads a file dropped onto the top of the minesweeper board
