@@ -1068,62 +1068,6 @@ async function sleep(msec) {
     return new Promise(resolve => setTimeout(resolve, msec));
 }
 
-async function doAnalysis() {
-
-    if (canvasLocked) {
-        console.log("Already analysing... request rejected");
-        return;
-    } else {
-        console.log("Doing analysis");
-        canvasLocked = true;
-    }
-
-    // put out a message and wait long enough for the ui to update
-    showMessage("Analysing...");
-    await sleep(1);
-
-    // this will set all the obvious mines which makes the solution counter a lot more efficient on very large boards
-    board.resetForAnalysis();
-    board.findAutoMove();
- 
-    var solutionCounter = solver.countSolutions(board);
-
-    if (solutionCounter.finalSolutionsCount != 0) {
-
-        var options = {};
-        if (docPlayStyle.value == "flag") {
-            options.playStyle = PLAY_STYLE_FLAGS;
-        } else if (docPlayStyle.value == "noflag") {
-            options.playStyle = PLAY_STYLE_NOFLAGS;
-        } else {
-            options.playStyle = PLAY_STYLE_EFFICIENCY;
-        } 
-
-        if (docOverlay.value != "none") {
-            options.fullProbability = true;
-        } else {
-            options.fullProbability = false;
-        }
-
-        //var hints = solver(board, options).actions;  // look for solutions
-
-        var solve = await solver(board, options);  // look for solutions
-        var hints = solve.actions;
-
-        justPressedAnalyse = true;
-
-        window.requestAnimationFrame(() => renderHints(hints, solve.other));
-    } else {
-        showMessage("The board is in an invalid state");
-        window.requestAnimationFrame(() => renderHints([], []));
-    }
-
-    // by delaying removing the logical lock we absorb any secondary clicking of the button / hot key
-    setTimeout(function () { canvasLocked = false; }, 200);
-    //canvasLocked = false;
-
-}
-
 async function checkBoard() {
 
     if (!analysisMode) {
