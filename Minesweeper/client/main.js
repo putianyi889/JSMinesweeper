@@ -287,39 +287,6 @@ async function saveAsMBF() {
 // render an array of tiles to the canvas
 
 // render an array of tiles to the canvas
-function renderTiles(tiles) {
-
-    //console.log(tiles.length + " tiles to render");
-
-    for (var i = 0; i < tiles.length; i++) {
-        var tile = tiles[i];
-        var tileType = HIDDEN;
-
-        if (tile.isBomb()) {
-            if (tile.exploded) {
-                tileType = EXPLODED;
-            } else {
-                tileType = BOMB;
-            }
- 
-        } else if (tile.isFlagged()) {
-            if (tile.isBomb() == null || tile.isBomb()) {  // isBomb() is null when the game hasn't finished
-                tileType = FLAGGED;
-            } else {
-                tileType = FLAGGED_WRONG;
-            }
-
-        } else if (tile.isCovered()) {
-            tileType = HIDDEN;
-
-        } else {
-            tileType = tile.getValue();
-        }
-        draw(tile.x, tile.y, tileType);
-    }
-
-
-}
 
 function updateMineCount(minesLeft) {
 
@@ -1161,7 +1128,6 @@ async function sendActionsMessage(message) {
     }
 
     // update the graphical board
-    window.requestAnimationFrame(() => renderTiles(tiles));
 
     if (board.isGameover()) {
         console.log("Game is over according to the server");
