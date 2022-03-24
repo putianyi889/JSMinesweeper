@@ -154,7 +154,6 @@ async function startup() {
     docMinesLeft.addEventListener('wheel', (event) => on_mouseWheel_minesLeft(event));
 
     // add some hot key 
-    document.addEventListener('keyup', event => { keyPressedEvent(event) });
 
     currentGameDescription = localStorage.getItem(GAME_DESCRIPTION_KEY);
 
