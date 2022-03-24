@@ -250,36 +250,6 @@ function propertiesOpen() {
 }
 
 // save as MBF
-/*
-async function saveAsMBF() {
-
-    if (board == null) {
-        return;
-    }
-
-    var mbf = board.getFormatMBF();
-
-    const options = {
-        excludeAcceptAllOption: true,
-        types: [
-            {
-                description: 'Minesweeper board',
-                accept: {
-                    'application/octet-stream': ['.mbf'],
-                },
-            },
-        ],
-    };
-    const fileHandle = await window.showSaveFilePicker(options);
-
-    const writable = await fileHandle.createWritable();
-
-    await writable.write(mbf);
-
-    await writable.close();
-
-}
-*/
 
 // download as MBF
 // create a BLOB of the data, insert a URL to it into the download link
