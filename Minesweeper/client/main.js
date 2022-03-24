@@ -398,7 +398,6 @@ async function bulkRun() {
 	document.getElementById("BulkRun").disabled = true;
 	document.getElementById("NewGame").disabled = true;
 	document.getElementById("repeatGame").disabled = true;
-	document.getElementById("AnalysisButton").disabled = true;
 	document.getElementById("fixsize").disabled = true;
 	document.getElementById("fixtime").disabled = true;
 	document.getElementById("sizelimit").disabled = true;
@@ -513,7 +512,6 @@ async function bulkRun() {
 	document.getElementById("BulkRun").disabled = false;
 	document.getElementById("NewGame").disabled = false;
 	document.getElementById("repeatGame").disabled = false;
-	document.getElementById("AnalysisButton").disabled = false;
 	document.getElementById("fixsize").disabled = false;
 	document.getElementById("fixtime").disabled = false;
 	document.getElementById("sizelimit").disabled = false;
@@ -765,8 +763,6 @@ async function newGame(width, height, mines, seed) {
     } else {
         board = new Board(id, width, height, mines, seed, gameType);
     }
-
-    TILE_SIZE = parseInt(docTileSize.value);
 
     resizeCanvas(width, height);
 
