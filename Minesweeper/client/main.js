@@ -292,49 +292,6 @@ async function saveAsMBF() {
 
 // download as MBF
 // create a BLOB of the data, insert a URL to it into the download link
-async function downloadAsMBF(e) {
-
-    // if we are in analysis mode then create the url, otherwise the url was created when the game was generated
-    if (analysisMode) {
-        if (board == null) {
-            e.preventDefault();
-            console.log("No Board defined, unable to generate MBF");
-            return false;
-        }
-
-        if (board.bombs_left != 0) {
-            showMessage("Mines left must be zero in order to download the board from Analysis mode.");
-            e.preventDefault();
-            return false;
-        }
-
-        var mbf = board.getFormatMBF();
-
-        if (mbf == null) {
-            console.log("Null data returned from getFormatMBF()");
-            e.preventDefault();
-            return false;
-        }
-
-        var blob = new Blob([mbf], { type: 'application/octet-stream' })
-
-        var url = URL.createObjectURL(blob);
-
-        console.log(url);
-
-        downloadHyperlink.href = url;  // Set the url ready to be downloaded
-
-        setTimeout(function () { console.log("Revoked " + url); URL.revokeObjectURL(url) }, 10000, url);
-    }
-
-    // create a download name based on the date/time
-    var now = new Date();
-
-    var filename = "Download" + now.toISOString() + ".mbf";
-
-    downloadHyperlink.download = filename;
-
-}
 
 // render an array of tiles to the canvas
 function renderHints(hints, otherActions) {
