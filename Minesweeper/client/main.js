@@ -1605,10 +1605,6 @@ function on_mouseWheel_minesLeft(event) {
 
 
 // Prevent default behavior (Prevent file from being opened)
-function dragOverHandler(ev) {
-    //console.log('File(s) in drop zone');
-    ev.preventDefault();
-}
 
 function buildMessageFromActions(actions, safeOnly) {
 
