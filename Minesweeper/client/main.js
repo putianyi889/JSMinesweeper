@@ -1242,12 +1242,6 @@ async function sendActionsMessage(message) {
         //setTimeout(function () { window.requestAnimationFrame(() => renderHints(hints)) }, 10);  // wait 10 milliseconds to prevent a clash with the renderTiles redraw
 
         // only show the hints if the hint box is checked
-        if (showHintsCheckBox.checked) {
-            window.requestAnimationFrame(() => renderHints(hints, other));
-        } else {
-            window.requestAnimationFrame(() => renderHints([], []));  // clear the hints overlay
-            showMessage("Press the 'Analyse' button to see the solver's suggested move.");
-        }
 
         if (autoPlayCheckBox.checked || assistedPlay) {
             if (hints.length > 0 && (hints[0].prob == 1 || hints[0].prob == 0)) {
