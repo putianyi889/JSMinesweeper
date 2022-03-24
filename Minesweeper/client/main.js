@@ -151,8 +151,6 @@ async function startup() {
     canvas.addEventListener('mouseenter', (event) => on_mouseEnter(event));
     canvas.addEventListener('mouseleave', (event) => on_mouseLeave(event));
 
-    docMinesLeft.addEventListener('wheel', (event) => on_mouseWheel_minesLeft(event));
-
     // add some hot key 
 
     currentGameDescription = localStorage.getItem(GAME_DESCRIPTION_KEY);
@@ -1215,49 +1213,6 @@ function on_mouseWheel(event) {
 
      // update the graphical board
     window.requestAnimationFrame(() => renderTiles([tile]));
-
-}
-
-function on_mouseWheel_minesLeft(event) {
-
-    if (!analysisMode) {
-        return;
-    }
-
-    //console.log("Mousewheel event at X=" + event.offsetX + ", Y=" + event.offsetY);
-
-    var delta = Math.sign(event.deltaY);
-
-    var digit = Math.floor(event.offsetX / DIGIT_WIDTH);
-
-    //console.log("Mousewheel event at X=" + event.offsetX + ", Y=" + event.offsetY + ", digit=" + digit);
-
-    var newCount = board.bombs_left;
-
-    var digits = getDigitCount(newCount);
-
-    if (digit == digits - 1) {
-        newCount = newCount + delta; 
-    } else if (digit == digits - 2) {
-        newCount = newCount + delta * 10;
-    } else {
-        newCount = newCount + delta * 10;
-    }
-
-    var flagsPlaced = board.getFlagsPlaced();
-
-    if (newCount < 0) {
-        board.bombs_left = 0;
-        board.num_bombs = flagsPlaced;
-    } else if (newCount > 9999) {
-        board.bombs_left = 9999;
-        board.num_bombs = 9999 + flagsPlaced;
-    } else {
-        board.bombs_left = newCount;
-        board.num_bombs = newCount + flagsPlaced;
-    }
-
-    window.requestAnimationFrame(() => updateMineCount(board.bombs_left));
 
 }
 
