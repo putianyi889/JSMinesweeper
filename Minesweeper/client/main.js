@@ -367,7 +367,6 @@ async function bulkRun() {
 	
 	document.getElementById("BulkRun").disabled = true;
 	document.getElementById("NewGame").disabled = true;
-	document.getElementById("repeatGame").disabled = true;
 	document.getElementById("fixsize").disabled = true;
 	document.getElementById("fixtime").disabled = true;
 	document.getElementById("sizelimit").disabled = true;
@@ -481,7 +480,6 @@ async function bulkRun() {
 	showMessage("Played " + played + " won " + won);
 	document.getElementById("BulkRun").disabled = false;
 	document.getElementById("NewGame").disabled = false;
-	document.getElementById("repeatGame").disabled = false;
 	document.getElementById("fixsize").disabled = false;
 	document.getElementById("fixtime").disabled = false;
 	document.getElementById("sizelimit").disabled = false;
