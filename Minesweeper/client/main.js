@@ -148,7 +148,6 @@ async function startup() {
     // add a listener for mouse clicks on the canvas
     canvas.addEventListener("mousedown", (event) => on_click(event));
     canvas.addEventListener("mouseup", (event) => mouseUpEvent(event));
-    canvas.addEventListener('mousemove', (event) => followCursor(event));
     canvas.addEventListener('wheel', (event) => on_mouseWheel(event));
     canvas.addEventListener('mouseenter', (event) => on_mouseEnter(event));
     canvas.addEventListener('mouseleave', (event) => on_mouseLeave(event));
@@ -972,57 +971,6 @@ function draw(x, y, tileType) {
 }
 
 // have the tooltip follow the mouse
-function followCursor(e) {
-
-    // get the tile we're over
-    var row = Math.floor(event.offsetY / TILE_SIZE);
-    var col = Math.floor(event.offsetX / TILE_SIZE);
-    hoverTile = board.getTileXY(col, row);
-
-    // if not showing hints don't show tooltip
-    if (!showHintsCheckBox.checked && !analysisMode && !justPressedAnalyse) {
-        tooltip.innerText = "";
-        return;
-    }
-
-    //console.log("Following cursor at X=" + e.offsetX + ", Y=" + e.offsetY);
-
-    tooltip.style.left = (TILE_SIZE + e.clientX - 220) + 'px';
-    tooltip.style.top = (e.clientY - TILE_SIZE * 1.5 - 70) + 'px';
-
-    if (dragging && analysisMode) {
-
-        var tile = hoverTile;
-
-        if (!tile.isEqual(dragTile)) {
-
-            dragTile = tile;  // remember the latest tile
-
-            if (tile.isCovered()) {
-                var flagCount = board.adjacentFoundMineCount(tile);
-                tile.setValue(flagCount);
-            } else {
-                tile.setCovered(true);
-            }
-
-            // update the graphical board
-            window.requestAnimationFrame(() => renderTiles([tile]));
-        }
-
-    }
-
-    if (row >= board.height || row < 0 || col >= board.width || col < 0) {
-        //console.log("outside of game boundaries!!");
-        tooltip.innerText = "";
-        tooltip.style.display = "none";
-        return;
-    } else {
-        var tile = board.getTileXY(col, row);
-        tooltip.innerText = tile.asText() + " " + tile.getHintText();
-        tooltip.style.display = "inline-block";
-    }
-
-}
 
 function mouseUpEvent(e) {
     if (dragging && e.which == 1) {
