@@ -975,22 +975,6 @@ async function newGame(width, height, mines, seed) {
 
 }
 
-function changeTileSize() {
-
-    TILE_SIZE = parseInt(docTileSize.value);
-
-    console.log("Changing tile size to " + TILE_SIZE);
-
-    resizeCanvas(board.width, board.height);  // resize the canvas
-
-    browserResized();  // do we need scroll bars?
-
-    renderTiles(board.tiles); // draw the board
-
-    //updateMineCount(board.bombs_left);  // reset the mine count
-
-}
-
     // make the canvases large enough to fit the game
 function resizeCanvas(width, height) {
 
