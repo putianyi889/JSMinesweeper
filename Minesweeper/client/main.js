@@ -1132,7 +1132,6 @@ async function sendActionsMessage(message) {
     if (board.isGameover()) {
         console.log("Game is over according to the server");
         canvasLocked = false;
-        window.requestAnimationFrame(() => renderHints([], []));  // clear the hints overlay
 
         var value3BV = reply.header.value3BV;
         var actionsMade = reply.header.actions;
